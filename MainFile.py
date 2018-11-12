@@ -22,6 +22,8 @@ print(THT.array)
 
 solver = BreadthFirstSearch(THT.array, method_parameter)
 
+CheckNumbers(THT.array)
+
 if method_code == "bfs":
     print("Wybrano metode breadth-first search")
     CheckPermutation(method_parameter)

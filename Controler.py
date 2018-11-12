@@ -24,8 +24,25 @@ def CheckPermutation(string):
 		print("Wprowadzono nieprawidlowy parametr metody!")
 		sys.exit()
 
+def CheckNumbers(array):
 
+	i=0
+	raw_list = []
 
+	for sub in array:
+		for num in sub:
+			raw_list.append(num)
+
+	while i<len(raw_list):
+		j = i+1
+		while j < len(raw_list):
+			print("test", j)
+			if raw_list[i] == raw_list[j]:
+				print("Nieprawidlowa numeracja elementow ukladanki")
+				sys.exit()
+			else:
+				j += 1
+		i += 1
 
 
 

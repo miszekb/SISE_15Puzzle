@@ -33,11 +33,11 @@ class TextFileHandler:
         infoFile = open(info_filename, "w")
         solutionFile = open(solution_filename, "w")
            
-        infoFile.write(str(len(solver_obj.solutionCode)))
-        infoFile.write(str(solver_obj.visited_states_number))
-        infoFile.write(str(solver_obj.processed_states_number))
-        infoFile.write(str(solver_obj.max_recursion_depth))
-        infoFile.write(str(solver_obj.solving_time))
+        infoFile.write(str(len(solver_obj.solutionCode)) + "\n")
+        infoFile.write(str(solver_obj.visited_states_number) + "\n")
+        infoFile.write(str(solver_obj.processed_states_number) + "\n")
+        infoFile.write(str(solver_obj.max_recursion_depth) + "\n")
+        infoFile.write(str(round(solver_obj.solving_time, 3)))
         infoFile.close()
 
         string_buf = "".join(solver_obj.solutionCode)
