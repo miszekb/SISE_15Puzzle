@@ -36,7 +36,6 @@ def CheckNumbers(array):
 	while i<len(raw_list):
 		j = i+1
 		while j < len(raw_list):
-			print("test", j)
 			if raw_list[i] == raw_list[j]:
 				print("Nieprawidlowa numeracja elementow ukladanki")
 				sys.exit()
