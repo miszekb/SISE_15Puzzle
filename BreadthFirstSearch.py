@@ -1,6 +1,7 @@
 import time
 import pprint
 import ast
+import sys
 
 class BreadthFirstSearch:
     pp = pprint.PrettyPrinter(indent=3)
@@ -11,7 +12,7 @@ class BreadthFirstSearch:
     array = []
     order = {}
     solving_time = 0
-    solutionCode = {}
+    solutionCode = []
     visited_states_number = 0
     processed_states_number = 0
     max_recursion_depth = 0
@@ -29,25 +30,27 @@ class BreadthFirstSearch:
         while 0 not in m[i]: i += 1
         j = m[i].index(0); #blank space (zero)
 
-        if i > 0:                                   
-            m[i][j], m[i-1][j] = m[i-1][j], m[i][j];  #move up
-            output.append(str(m))
-            m[i][j], m[i-1][j] = m[i-1][j], m[i][j]; 
-              
-        if i < 3:                                   
-            m[i][j], m[i+1][j] = m[i+1][j], m[i][j]   #move down
-            output.append(str(m))
-            m[i][j], m[i+1][j] = m[i+1][j], m[i][j]
-
-        if j > 0:                                                      
-            m[i][j], m[i][j-1] = m[i][j-1], m[i][j]   #move left
-            output.append(str(m))
-            m[i][j], m[i][j-1] = m[i][j-1], m[i][j]
-
-        if j < 3:                                   
-            m[i][j], m[i][j+1] = m[i][j+1], m[i][j]   #move right
-            output.append(str(m))
-            m[i][j], m[i][j+1] = m[i][j+1], m[i][j]
+        for step in self.order:
+            if step == "U":
+                if i > 0:                                   
+                    m[i][j], m[i-1][j] = m[i-1][j], m[i][j];  #move up
+                    output.append(str(m))
+                    m[i][j], m[i-1][j] = m[i-1][j], m[i][j]; 
+            if step == "D":          
+                if i < self.ver_size-1:                                   
+                    m[i][j], m[i+1][j] = m[i+1][j], m[i][j]   #move down
+                    output.append(str(m))
+                    m[i][j], m[i+1][j] = m[i+1][j], m[i][j]
+            if step =="L":   
+                if j > 0:                                                      
+                    m[i][j], m[i][j-1] = m[i][j-1], m[i][j]   #move left
+                    output.append(str(m))
+                    m[i][j], m[i][j-1] = m[i][j-1], m[i][j]
+            if step =="R":
+                if j < self.col_size-1:                                   
+                    m[i][j], m[i][j+1] = m[i][j+1], m[i][j]   #move right
+                    output.append(str(m))
+                    m[i][j], m[i][j+1] = m[i][j+1], m[i][j]
 
         return output
 
@@ -56,55 +59,44 @@ class BreadthFirstSearch:
         start_time = time.time()
         front = [[str(self.array)]]
         expanded = []
-        expanded_nodes=0
 
-        while front:
+        while front: #jeśli nie jest puste
+            self.pp.pprint((front[0]))
             i = 0
-            for j in range(1, len(front)):    #minimum
-                if len(front[i]) > len(front[j]):
-                    i = j
-            path = front[i]         
-            front = front[:i] + front[i+1:]
-            endnode = path[-1]
+            path = front[0]
+            front = front[i+1:] #wszystkie oprocz front[i]
+            endnode = path[-1] #ostatni element
             if endnode in expanded: continue
             for k in self.moves(endnode):
+                #self.pp.pprint(self.moves(endnode))
+                #self.pp.pprint(endnode)
                 if k in expanded: continue
-                print("szukam")
                 front.append(path + [k])
             expanded.append(endnode)
-            expanded_nodes += 1
-            if endnode == self.end: break
+            #print(i)      
+            self.processed_states_number += 1
+            if endnode == self.end: break # jeśli się pokrywa to koniec
         self.solving_time = time.time() - start_time
-        print("Expanded nodes:",expanded_nodes)
+        print("Expanded nodes:",self.processed_states_number)
+        self.max_recursion_depth = len(path) - 1
         print("Solution:")
-        self.pp.pprint(path[0])
         print(self.DetermineSteps(path))
         print("Rozwiazywanie zakonczone!")
 
     def DetermineSteps(self, solution_array):
-
         steps_array = []
-        diff_array = []
-        sol_array1 = eval(solution_array)
 
-        for i in range(0, len(solution_array) - 1):
-            print("l")
-            sol_array1.append(ast.literal_eval(solution_array[i]))
-            for j in range(0, len(solution_array[0]) - 1):
-                sol_array2.append(ast.literal_eval(sol_array1))
-                for k in range(0, len(solution_array[0][0]) - 1):
-                    sol_array3.append(ast.literal_eval(sol_array2))
-                    if sol_array3[i][j][k] == "0":
-                        print("k")
-                        diff_array.append([j,k])
+        for k in range(0, len(solution_array)):
+            m = eval(solution_array[k])
+            print(m)
+            i = 0
+            while 0 not in m[i]: i += 1
+            j = m[i].index(0);
+            steps_array.append([i,j])
+        for k in range(1, len(steps_array)):
+            if steps_array[k][0] > steps_array[k-1][0]: self.solutionCode.append("U")
+            if steps_array[k][0] < steps_array[k-1][0]: self.solutionCode.append("D")
+            if steps_array[k][1] > steps_array[k-1][1]: self.solutionCode.append("L")
+            if steps_array[k][1] < steps_array[k-1][1]: self.solutionCode.append("R")
+        print(''.join(self.solutionCode))
 
-        for i in range(1, len(diff_array) - 1):
-            if diff_array[i][0] > diff_array[i-1][0]:
-                steps_array.append("D")
-            if diff_array[i][0] < diff_array[i-1][0]:
-                steps_array.append("U")
-            if diff_array[i][1] > diff_array[i-1][1]:
-                steps_array.append("R")    
-            if diff_array[i][1] < diff_array[i-1][1]:
-                steps_array.append("L")
-        return steps_array

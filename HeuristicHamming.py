@@ -1,8 +1,10 @@
 import time
+import pprint
 
 class HeuristicHamming:
 
     array = []
+    pp = pprint.PrettyPrinter(indent=3)
     solving_time = 0
     solutionCode = {}
     visited_states_number = 0
@@ -15,13 +17,14 @@ class HeuristicHamming:
     def Solve(self):
         print("Solving started")
         start_time = time.time()
-        front = [[ManhattanHeuristic(start), start]] #optional: heuristic_1
+        front = [[self.ManhattanHeuristic(self.array), self.array]] 
         expanded = []
         expanded_nodes=0
 
         while front:
             i = 0
             for j in range(1, len(front)):
+                sel
                 if front[i][0] > front[j][0]:
                     i = j
                 path = front[i]
@@ -32,7 +35,7 @@ class HeuristicHamming:
                 if endnode in expanded: continue
                 for k in moves(endnode):
                     if k in expanded: continue
-                    newpath = [path[0] + ManhattanHeuristic(k) - ManhattanHeuristic(endnode)] + path[1:] + [k] 
+                    newpath = [path[0] + self.ManhattanHeuristic(k) - ManhattanHeuristic(endnode)] + path[1:] + [k] 
                     front.append(newpath)
                     expanded.append(endnode)
             expanded_nodes += 1 
@@ -48,3 +51,32 @@ class HeuristicHamming:
                 if m[i][j] == 0: continue
                 distance += abs(i - (m[i][j]/4)) + abs(j -  (m[i][j]%4));
         return distance
+
+    def moves(self, mat):
+        output = []
+        m = eval(mat)   
+        i = 0
+        while 0 not in m[i]: i += 1
+        j = m[i].index(0); #blank space (zero)
+
+        if i > 0:                                   
+            m[i][j], m[i-1][j] = m[i-1][j], m[i][j];  #move up
+            output.append(str(m))
+            m[i][j], m[i-1][j] = m[i-1][j], m[i][j]; 
+              
+        if i < 3:                                   
+            m[i][j], m[i+1][j] = m[i+1][j], m[i][j]   #move down
+            output.append(str(m))
+            m[i][j], m[i+1][j] = m[i+1][j], m[i][j]
+
+        if j > 0:                                                      
+            m[i][j], m[i][j-1] = m[i][j-1], m[i][j]   #move left
+            output.append(str(m))
+            m[i][j], m[i][j-1] = m[i][j-1], m[i][j]
+
+        if j < 3:                                   
+            m[i][j], m[i][j+1] = m[i][j+1], m[i][j]   #move right
+            output.append(str(m))
+            m[i][j], m[i][j+1] = m[i][j+1], m[i][j]
+
+        return output
