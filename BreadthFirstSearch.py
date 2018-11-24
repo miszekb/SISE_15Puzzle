@@ -7,7 +7,7 @@ class BreadthFirstSearch:
     pp = pprint.PrettyPrinter(indent=3)
     col_size = 0
     ver_size = 0
-    end = str([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12],[13, 14, 15, 0]])
+    end = []
 
     array = []
     order = {}
@@ -17,11 +17,12 @@ class BreadthFirstSearch:
     processed_states_number = 0
     max_recursion_depth = 0
 
-    def __init__(self, array, order, col_size, ver_size):
+    def __init__(self, array, order, col_size, ver_size, pattern):
         self.col_size = col_size
         self.ver_size = ver_size
         self.array = array
         self.order = list(order)
+        self.end = str(pattern)
 
     def moves(self, mat):
         output = []

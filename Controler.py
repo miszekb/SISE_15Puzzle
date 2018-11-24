@@ -42,6 +42,20 @@ def CheckNumbers(array):
 			else:
 				j += 1
 		i += 1
+def GeneratePattern(rows, columns):
+
+	counter = 1
+	array = []
+	for i in range(0, rows):
+		row = []
+		for j in range(0, columns):
+			if counter < rows * columns: row.append(counter)
+			else: row.append(0) 
+			counter += 1
+		array.append(row)
+
+	print(array)
+	return array
 
 
 

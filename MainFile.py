@@ -19,8 +19,8 @@ infoFilename = sys.argv[5]
 
 THT.readFile()
 print(THT.array)
-
-solver = BreadthFirstSearch(THT.array, method_parameter, THT.col_number, THT.line_number)
+GeneratePattern(THT.line_number, THT.col_number)
+solver = BreadthFirstSearch(THT.array, method_parameter, THT.col_number, THT.line_number, GeneratePattern(THT.line_number, THT.col_number))
 
 CheckNumbers(THT.array)
 
