@@ -10,9 +10,11 @@ class HeuristicHamming:
     visited_states_number = 0
     processed_states_number = 0
     max_recursion_depth = 0
+    end = []
 
-    def __init__(self, array):
-        self.array = array
+    def __init__(self, array, pattern):
+        self.array = str(array)
+        self.end = str([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]])
 
     def Solve(self):
         print("Solving started")
@@ -20,24 +22,23 @@ class HeuristicHamming:
         front = [[self.ManhattanHeuristic(self.array), self.array]] 
         expanded = []
         expanded_nodes=0
-
+        #self.pp.pprint(front)
         while front:
             i = 0
             for j in range(1, len(front)):
-                sel
-                if front[i][0] > front[j][0]:
-                    i = j
-                path = front[i]
-                front = front[:i] + front[i+1:]
-                endnode = path[-1]
-                if endnode == end:
-                    break
-                if endnode in expanded: continue
-                for k in moves(endnode):
-                    if k in expanded: continue
-                    newpath = [path[0] + self.ManhattanHeuristic(k) - ManhattanHeuristic(endnode)] + path[1:] + [k] 
-                    front.append(newpath)
-                    expanded.append(endnode)
+	            if front[i][0] > front[j][0]:
+	                i = j
+            path = front[i]
+            front = front[:i] + front[i+1:]
+            endnode = path[-1]
+            if endnode == self.end:
+                break
+            if endnode in expanded: continue
+            for k in self.moves(endnode):
+                if k in expanded: continue
+                newpath = [path[0] + self.ManhattanHeuristic(k) - self.ManhattanHeuristic(endnode)] + path[1:] + [k] 
+                front.append(newpath)
+                expanded.append(endnode)
             expanded_nodes += 1 
         print("Solution: ")
         print("Rozwiazywanie zakonczone!")
@@ -50,7 +51,7 @@ class HeuristicHamming:
             for j in range(4):
                 if m[i][j] == 0: continue
                 distance += abs(i - (m[i][j]/4)) + abs(j -  (m[i][j]%4));
-        return distance
+        return (distance)
 
     def moves(self, mat):
         output = []

@@ -9,11 +9,10 @@ class DepthFirstSearch:
     visited_states_number = 0
     processed_states_number = 0
     max_recursion_depth = 0
+    end = []
 
-    end = str([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12],[13, 14, 15, 0]])
-
-
-    def __init__(self, array, order):
+    def __init__(self, array, order, pattern):
+        self.end = str(pattern)
         self.array = array
         self.order = list(order)
 
