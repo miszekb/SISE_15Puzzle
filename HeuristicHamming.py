@@ -6,7 +6,7 @@ class HeuristicHamming:
     array = []
     pp = pprint.PrettyPrinter(indent=3)
     solving_time = 0
-    solutionCode = {}
+    solutionCode = []
     visited_states_number = 0
     processed_states_number = 0
     max_recursion_depth = 0
@@ -14,12 +14,12 @@ class HeuristicHamming:
 
     def __init__(self, array, pattern):
         self.array = str(array)
-        self.end = str([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]])
+        self.end = str(pattern)
 
     def Solve(self):
         print("Solving started")
         start_time = time.time()
-        front = [[self.ManhattanHeuristic(self.array), self.array]] 
+        front = [[self.HammingHeuristic(self.array), self.array]] 
         expanded = []
         expanded_nodes=0
         #self.pp.pprint(front)
@@ -36,22 +36,25 @@ class HeuristicHamming:
             if endnode in expanded: continue
             for k in self.moves(endnode):
                 if k in expanded: continue
-                newpath = [path[0] + self.ManhattanHeuristic(k) - self.ManhattanHeuristic(endnode)] + path[1:] + [k] 
+                newpath = [path[0] + self.HammingHeuristic(k) - self.HammingHeuristic(endnode)] + path[1:] + [k] 
                 front.append(newpath)
                 expanded.append(endnode)
-            expanded_nodes += 1 
+            self.processed_states_number += 1
         print("Solution: ")
+        print(self.DetermineSteps(path[1:]))
         print("Rozwiazywanie zakonczone!")
         self.solving_time = time.time() - start_time
 
-    def ManhattanHeuristic(self, puzz):   
-        distance = 0
-        m = eval(puzz)          
-        for i in range(4):
-            for j in range(4):
-                if m[i][j] == 0: continue
-                distance += abs(i - (m[i][j]/4)) + abs(j -  (m[i][j]%4));
-        return (distance)
+    def HammingHeuristic(self, puzz):   
+	    misplaced = 0
+	    compare = 1
+	    m = eval(puzz)
+	    for i in range(4):
+	        for j in range(4):
+	            if m[i][j] != compare:
+	                misplaced += 1
+	            compare += 1
+	    return misplaced
 
     def moves(self, mat):
         output = []
@@ -81,3 +84,20 @@ class HeuristicHamming:
             m[i][j], m[i][j+1] = m[i][j+1], m[i][j]
 
         return output
+
+    def DetermineSteps(self, solution_array):
+        steps_array = []
+
+        for k in range(0, len(solution_array)):
+            m = eval(solution_array[k])
+            print(m)
+            i = 0
+            while 0 not in m[i]: i += 1
+            j = m[i].index(0);
+            steps_array.append([i,j])
+        for k in range(1, len(steps_array)):
+            if steps_array[k][0] > steps_array[k-1][0]: self.solutionCode.append("U")
+            if steps_array[k][0] < steps_array[k-1][0]: self.solutionCode.append("D")
+            if steps_array[k][1] > steps_array[k-1][1]: self.solutionCode.append("L")
+            if steps_array[k][1] < steps_array[k-1][1]: self.solutionCode.append("R")
+        print(''.join(self.solutionCode))

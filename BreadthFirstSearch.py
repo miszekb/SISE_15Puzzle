@@ -1,6 +1,5 @@
 import time
 import pprint
-import ast
 import sys
 
 class BreadthFirstSearch:
@@ -8,7 +7,6 @@ class BreadthFirstSearch:
     col_size = 0
     ver_size = 0
     end = []
-
     array = []
     order = {}
     solving_time = 0
@@ -81,7 +79,7 @@ class BreadthFirstSearch:
         print("Expanded nodes:",self.processed_states_number)
         self.max_recursion_depth = len(path) - 1
         print("Solution:")
-        print(self.DetermineSteps(path))
+        print((path))
         print("Rozwiazywanie zakonczone!")
 
     def DetermineSteps(self, solution_array):
