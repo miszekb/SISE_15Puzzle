@@ -17,7 +17,7 @@ class HeuristicManhattan:
     max_recursion_depth = 0
 
     def __init__(self, array, col_size, ver_size, pattern):
-        self.array = array
+        self.array = str(array)
         self.end = str(pattern)
         self.col_size = col_size
         self.ver_size = ver_size
@@ -46,6 +46,8 @@ class HeuristicManhattan:
             for k in self.moves(endnode):
                 if k in expanded: continue
                 newpath = [path[0] + self.ManhattanHeuristic(k) - self.ManhattanHeuristic(endnode)] + path[1:] + [k] 
+                if (len(newpath)-1) > self.max_recursion_depth:
+                    self.max_recursion_depth = len(newpath) - 1
                 front.append(newpath)
                 expanded.append(endnode)
             self.processed_states_number += 1 
@@ -60,7 +62,7 @@ class HeuristicManhattan:
 	    for i in range(4):
 	        for j in range(4):
 	            if m[i][j] == 0: continue
-	            distance += abs(i - ((m[i][j]-1)/4)) + abs(j - ((m[i][j]-1)%4))
+	            distance += abs(i - ((m[i][j]-1)/self.col_size)) + abs(j - ((m[i][j]-1)%self.ver_size))
 	    return distance
 
     def moves(self, mat):

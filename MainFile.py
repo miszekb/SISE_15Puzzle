@@ -37,10 +37,10 @@ elif method_code == "astr":
     print("Wybrano metode A-star")
 
     if method_parameter == "hamm":
-        solver = HeuristicHamming(THT.array, GeneratePattern(THT.line_number, THT.col_number))
+        solver = HeuristicHamming(THT.array, THT.col_number, THT.line_number, GeneratePattern(THT.line_number, THT.col_number))
 
     elif method_parameter == "manh":
-        solver = HeuristicManhattan(THT.array)
+        solver = HeuristicManhattan(THT.array, THT.col_number, THT.line_number, GeneratePattern(THT.line_number, THT.col_number))
 
     else:
         print("Wprowadzono nieprawidlowy parametr metody")

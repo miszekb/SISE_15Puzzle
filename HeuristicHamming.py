@@ -12,9 +12,11 @@ class HeuristicHamming:
     max_recursion_depth = 0
     end = []
 
-    def __init__(self, array, pattern):
+    def __init__(self, array, col_size, ver_size, pattern):
         self.array = str(array)
         self.end = str(pattern)
+        self.col_size = col_size
+        self.ver_size = ver_size
 
     def Solve(self):
         print("Solving started")
@@ -32,11 +34,16 @@ class HeuristicHamming:
             front = front[:i] + front[i+1:]
             endnode = path[-1]
             if endnode == self.end:
+                self.visited_states_number += 1
                 break
+            else:
+            	self.visited_states_number += 1
             if endnode in expanded: continue
             for k in self.moves(endnode):
                 if k in expanded: continue
                 newpath = [path[0] + self.HammingHeuristic(k) - self.HammingHeuristic(endnode)] + path[1:] + [k] 
+                if (len(newpath)-1) > self.max_recursion_depth:
+                    self.max_recursion_depth = len(newpath) - 1
                 front.append(newpath)
                 expanded.append(endnode)
             self.processed_states_number += 1
@@ -49,8 +56,8 @@ class HeuristicHamming:
 	    misplaced = 0
 	    compare = 1
 	    m = eval(puzz)
-	    for i in range(4):
-	        for j in range(4):
+	    for i in range(self.col_size):
+	        for j in range(self.ver_size):
 	            if m[i][j] != compare:
 	                misplaced += 1
 	            compare += 1
