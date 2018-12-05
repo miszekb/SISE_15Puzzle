@@ -1,20 +1,27 @@
 import time
+import pprint
+import sys
 
 class DepthFirstSearch:
     
+    pp = pprint.PrettyPrinter(indent=3)
+    col_size = 0
+    ver_size = 0
+    end = []
     array = []
     order = {}
     solving_time = 0
-    solutionCode = {}
+    solutionCode = []
     visited_states_number = 0
     processed_states_number = 0
     max_recursion_depth = 0
-    end = []
+    expanded = []
 
     def __init__(self, array, order, pattern):
         self.end = str(pattern)
         self.array = array
         self.order = list(order)
+        self.expanded = []
 
     def moves(self, mat):
         output = []
@@ -49,17 +56,27 @@ class DepthFirstSearch:
     def Solve(self):
         print("Solving started")
         start_time = time.time()
+        self.front = [[str(self.array)]]
+        self.expanded = []
 
-        while self.array:
-            branch = self.array
-            branch.append(self.moves(self.array))
-            if self.max_recursion_depth == 21: break
-            for i in range(0, 21):
-                branch.append(self.moves(branch))
-            self.max_recursion_depth += 1
+        while self.front: #jeśli nie jest puste
+            print("eee")            
+            i = 0
+            self.path = self.front[0]
+            self.front = self.front[i+1:] #wszystkie oprocz front[i]
+            endnode = self.path[-1] #ostatni element
+            for k in self.moves(endnode):
+                self.Digging(k)
+                self.front.append(self.path + [k])
+            self.expanded.append(endnode)   
+            self.processed_states_number += 1
 
-        print("Rozwiazywanie zakonczone!")
         self.solving_time = time.time() - start_time
+        print("Expanded nodes:",self.processed_states_number)
+        self.max_recursion_depth = len(self.path) - 1
+        print("Solution:")
+        self.pp.pprint(self.path)
+        print("Rozwiazywanie zakonczone!")
 
     def DetermineSteps(self, solution_array):
         steps_array = []
@@ -78,3 +95,24 @@ class DepthFirstSearch:
             if steps_array[k][1] < steps_array[k-1][1]: self.solutionCode.append("R")
         print(''.join(self.solutionCode))
 
+    def Digging(self, endnode):
+        isRepeated = 0
+
+        if endnode == self.end:
+            return # jeśli się pokrywa to koniec
+        for k in self.moves(endnode):
+            if k in self.expanded: isRepeated += 1
+
+        if isRepeated == len(self.moves(endnode)):
+            print("ehh")
+            return
+        else:
+            for k in self.moves(endnode):
+                self.pp.pprint(endnode)
+                self.pp.pprint(k)
+                self.expanded.append(endnode)   
+                self.processed_states_number += 1
+                if k in self.expanded: continue
+                else: 
+                    self.front.append(self.path + [k])
+                    self.Digging(k)

@@ -31,7 +31,7 @@ if method_code == "bfs":
 elif method_code == "dfs":
     print("Wybrano metode depth-first search")
     CheckPermutation(method_parameter)
-    solver = DepthFirstSearch(THT.array, method_parameter)
+    solver = DepthFirstSearch(THT.array, method_parameter, GeneratePattern(THT.line_number, THT.col_number))
 
 elif method_code == "astr":
     print("Wybrano metode A-star")

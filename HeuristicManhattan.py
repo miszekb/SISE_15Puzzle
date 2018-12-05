@@ -38,14 +38,17 @@ class HeuristicManhattan:
             front = front[:i] + front[i+1:]
             endnode = path[-1]
             if endnode == self.end:
+                self.visited_states_number += 1
                 break
+            else:
+            	self.visited_states_number += 1
             if endnode in expanded: continue
             for k in self.moves(endnode):
                 if k in expanded: continue
                 newpath = [path[0] + self.ManhattanHeuristic(k) - self.ManhattanHeuristic(endnode)] + path[1:] + [k] 
                 front.append(newpath)
                 expanded.append(endnode)
-            processed_states_number += 1 
+            self.processed_states_number += 1 
         print("Solution: ")
         print(self.DetermineSteps(path[1:]))
         print("Rozwiazywanie zakonczone!")

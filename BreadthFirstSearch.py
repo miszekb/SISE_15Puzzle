@@ -74,12 +74,16 @@ class BreadthFirstSearch:
             expanded.append(endnode)
             #print(i)      
             self.processed_states_number += 1
-            if endnode == self.end: break # jeśli się pokrywa to koniec
+            if endnode == self.end:
+                self.visited_states_number += 1
+                break
+            else:
+            	self.visited_states_number += 1
         self.solving_time = time.time() - start_time
-        print("Expanded nodes:",self.processed_states_number)
+        print("Expanded nodes:",len(expanded))
         self.max_recursion_depth = len(path) - 1
         print("Solution:")
-        print((path))
+        print(self.DetermineSteps(path))
         print("Rozwiazywanie zakonczone!")
 
     def DetermineSteps(self, solution_array):
