@@ -41,7 +41,7 @@ class TextFileHandler:
         infoFile.close()
 
         string_buf = "".join(solver_obj.solutionCode)
-
+        #solutionFile.write(str(len(solver_obj.solutionCode)) + "\n")
         solutionFile.write(string_buf)
         solutionFile.close()
 

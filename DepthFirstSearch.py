@@ -14,75 +14,33 @@ class DepthFirstSearch:
     solutionCode = []
     visited_states_number = 0
     processed_states_number = 0
-    max_recursion_depth = 0
+    max_recursion_depth = 21
     expanded = []
 
-    def __init__(self, array, order, pattern):
-        self.end = str(pattern)
+    def __init__(self, array, order, pattern, ver_size, col_size):
+        self.end = pattern
         self.array = array
         self.order = list(order)
         self.expanded = []
-
-    def moves(self, mat):
-        output = []
-        m = eval(mat)   
-        i = 0
-        while 0 not in m[i]: i += 1
-        j = m[i].index(0); #blank space (zero)
-
-        for step in self.order:
-            if step == "U":
-                if i > 0:                                   
-                    m[i][j], m[i-1][j] = m[i-1][j], m[i][j];  #move up
-                    output.append(str(m))
-                    m[i][j], m[i-1][j] = m[i-1][j], m[i][j]; 
-            if step == "D":          
-                if i < self.ver_size-1:                                   
-                    m[i][j], m[i+1][j] = m[i+1][j], m[i][j]   #move down
-                    output.append(str(m))
-                    m[i][j], m[i+1][j] = m[i+1][j], m[i][j]
-            if step == "L":   
-                if j > 0:                                                      
-                    m[i][j], m[i][j-1] = m[i][j-1], m[i][j]   #move left
-                    output.append(str(m))
-                    m[i][j], m[i][j-1] = m[i][j-1], m[i][j]
-            if step == "R":
-                if j < self.col_size-1:                                   
-                    m[i][j], m[i][j+1] = m[i][j+1], m[i][j]   #move right
-                    output.append(str(m))
-                    m[i][j], m[i][j+1] = m[i][j+1], m[i][j]
-        return output
+        self.ver_size = ver_size
+        self.col_size = col_size
 
     def Solve(self):
         print("Solving started")
         start_time = time.time()
-        self.front = [[str(self.array)]]
-        self.expanded = []
-
-        while self.front: #jeśli nie jest puste
-            print("eee")            
-            i = 0
-            self.path = self.front[0]
-            self.front = self.front[i+1:] #wszystkie oprocz front[i]
-            endnode = self.path[-1] #ostatni element
-            for k in self.moves(endnode):
-                self.Digging(k)
-                self.front.append(self.path + [k])
-            self.expanded.append(endnode)   
-            self.processed_states_number += 1
-
+        #path = self.dfs((self.array), self.end, self.num_moves(self.ver_size, self.col_size))
+        path = self.dfs((self.array), self.end, self.num_moves(self.ver_size, self.col_size))
         self.solving_time = time.time() - start_time
-        print("Expanded nodes:",self.processed_states_number)
-        self.max_recursion_depth = len(self.path) - 1
+        print("Expanded nodes:", )
         print("Solution:")
-        self.pp.pprint(self.path)
+        print(self.DetermineSteps(path))
         print("Rozwiazywanie zakonczone!")
 
     def DetermineSteps(self, solution_array):
         steps_array = []
 
         for k in range(0, len(solution_array)):
-            m = eval(solution_array[k])
+            m = solution_array[k]
             print(m)
             i = 0
             while 0 not in m[i]: i += 1
@@ -95,24 +53,56 @@ class DepthFirstSearch:
             if steps_array[k][1] < steps_array[k-1][1]: self.solutionCode.append("R")
         print(''.join(self.solutionCode))
 
-    def Digging(self, endnode):
-        isRepeated = 0
-
-        if endnode == self.end:
-            return # jeśli się pokrywa to koniec
-        for k in self.moves(endnode):
-            if k in self.expanded: isRepeated += 1
-
-        if isRepeated == len(self.moves(endnode)):
-            print("ehh")
-            return
-        else:
-            for k in self.moves(endnode):
-                self.pp.pprint(endnode)
-                self.pp.pprint(k)
-                self.expanded.append(endnode)   
+    def dfs(self, puzzle, goal, get_moves):
+        stack = []
+        stack.append([puzzle])
+        while stack:
+            path = stack.pop(0)
+            node = path[-1]
+            
+            if node == goal:
+                return path
+            else:
+                self.visited_states_number += 1
+            i = 0
+            for adjacent in get_moves(node):
+                if adjacent not in path:
+                    i += 1
+                    new_path = list(path)
+                    new_path.append(adjacent)
+                    stack.append(new_path)
+                    if self.max_recursion_depth < len(path) - 1:
+                        self.max_recursion_depth = len(path) - 1
+            if i == len(get_moves(node)):
                 self.processed_states_number += 1
-                if k in self.expanded: continue
-                else: 
-                    self.front.append(self.path + [k])
-                    self.Digging(k)
+    
+    def num_moves(self, rows, cols):
+        def get_moves(subject):
+            moves = []
+
+            zrow, zcol = next((r, c)
+                for r, l in enumerate(subject)
+                    for c, v in enumerate(l) if v == 0)
+
+            def swap(row, col):
+                import copy
+                s = copy.deepcopy(subject)
+                s[zrow][zcol], s[row][col] = s[row][col], s[zrow][zcol]
+                return s
+
+            for step in self.order:
+                if step == "U":
+                    if zrow > 0:
+                        moves.append(swap(zrow - 1, zcol))
+                if step == "D":
+                    if zcol < cols - 1:
+                        moves.append(swap(zrow, zcol + 1)) 
+                if step == "L":
+                    if zrow < rows - 1:
+                        moves.append(swap(zrow + 1, zcol))
+                if step == "R":   
+                    if zcol > 0:
+                        moves.append(swap(zrow, zcol - 1))
+
+            return moves
+        return get_moves

@@ -59,8 +59,7 @@ class BreadthFirstSearch:
         front = [[str(self.array)]]
         expanded = []
 
-        while front: #jeśli nie jest puste
-            self.pp.pprint((front[0]))
+        while front: #jeśli nie jest puste      
             i = 0
             path = front[0]
             front = front[i+1:] #wszystkie oprocz front[i]
@@ -79,8 +78,9 @@ class BreadthFirstSearch:
                 break
             else:
             	self.visited_states_number += 1
+            	
         self.solving_time = time.time() - start_time
-        print("Expanded nodes:",len(expanded))
+        print("Expanded nodes:", len(expanded))
         self.max_recursion_depth = len(path) - 1
         print("Solution:")
         print(self.DetermineSteps(path))
