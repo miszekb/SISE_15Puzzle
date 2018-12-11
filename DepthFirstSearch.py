@@ -73,8 +73,10 @@ class DepthFirstSearch:
                     stack.append(new_path)
                     if self.max_recursion_depth < len(path) - 1:
                         self.max_recursion_depth = len(path) - 1
+                    break
             if i == len(get_moves(node)):
                 self.processed_states_number += 1
+        
     
     def num_moves(self, rows, cols):
         def get_moves(subject):
@@ -91,18 +93,21 @@ class DepthFirstSearch:
                 return s
 
             for step in self.order:
-                if step == "U":
-                    if zrow > 0:
-                        moves.append(swap(zrow - 1, zcol))
-                if step == "D":
-                    if zcol < cols - 1:
-                        moves.append(swap(zrow, zcol + 1)) 
-                if step == "L":
-                    if zrow < rows - 1:
-                        moves.append(swap(zrow + 1, zcol))
-                if step == "R":   
+                if step == "R":                     
                     if zcol > 0:
+                        print("1")
                         moves.append(swap(zrow, zcol - 1))
-
+                if step == "U":        
+                    if zrow < rows - 1:
+                        print("2")
+                        moves.append(swap(zrow + 1, zcol))
+                if step == "D":  
+                    if zrow > 0:
+                        print("3")
+                        moves.append(swap(zrow - 1, zcol))
+                if step == "L":        
+                    if zcol < cols - 1:
+                        print("4")
+                        moves.append(swap(zrow, zcol + 1)) 
             return moves
         return get_moves
