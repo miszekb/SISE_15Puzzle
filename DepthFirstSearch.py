@@ -14,7 +14,7 @@ class DepthFirstSearch:
     solutionCode = []
     visited_states_number = 0
     processed_states_number = 0
-    max_recursion_depth = 21
+    max_recursion_depth = 0
     expanded = []
 
     def __init__(self, array, order, pattern, ver_size, col_size):
@@ -39,6 +39,9 @@ class DepthFirstSearch:
     def DetermineSteps(self, solution_array):
         steps_array = []
 
+        if len(solution_array) == 0:
+            return ("Przekroczono zakres")
+        
         for k in range(0, len(solution_array)):
             m = solution_array[k]
             print(m)
@@ -76,6 +79,9 @@ class DepthFirstSearch:
                     break
             if i == len(get_moves(node)):
                 self.processed_states_number += 1
+            if len(path) >= 100:
+                path = []
+                return path
         
     
     def num_moves(self, rows, cols):
