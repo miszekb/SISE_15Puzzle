@@ -28,8 +28,7 @@ class DepthFirstSearch:
     def Solve(self):
         print("Solving started")
         start_time = time.time()
-        #path = self.dfs((self.array), self.end, self.num_moves(self.ver_size, self.col_size))
-        path = self.dfs((self.array), self.end, self.num_moves(self.ver_size, self.col_size))
+        path = self.dfs((self.array), self.end, self.num_moves(self.col_size, self.ver_size))
         self.solving_time = time.time() - start_time
         print("Expanded nodes:", )
         print("Solution:")
@@ -64,22 +63,20 @@ class DepthFirstSearch:
             node = path[-1]
             
             if node == goal:
+                self.visited_states_number += 1
                 return path
             else:
                 self.visited_states_number += 1
-            i = 0
             for adjacent in get_moves(node):
                 if adjacent not in path:
-                    i += 1
                     new_path = list(path)
                     new_path.append(adjacent)
                     stack.append(new_path)
                     if self.max_recursion_depth < len(path) - 1:
                         self.max_recursion_depth = len(path) - 1
                     break
-            if i == len(get_moves(node)):
-                self.processed_states_number += 1
-            if len(path) >= 100:
+            self.processed_states_number += 1
+            if len(path) >= 80:
                 path = []
                 return path
         
@@ -101,19 +98,15 @@ class DepthFirstSearch:
             for step in self.order:
                 if step == "R":                     
                     if zcol > 0:
-                        print("1")
                         moves.append(swap(zrow, zcol - 1))
                 if step == "U":        
                     if zrow < rows - 1:
-                        print("2")
                         moves.append(swap(zrow + 1, zcol))
                 if step == "D":  
                     if zrow > 0:
-                        print("3")
                         moves.append(swap(zrow - 1, zcol))
                 if step == "L":        
                     if zcol < cols - 1:
-                        print("4")
                         moves.append(swap(zrow, zcol + 1)) 
             return moves
         return get_moves

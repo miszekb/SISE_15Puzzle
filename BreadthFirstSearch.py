@@ -20,65 +20,14 @@ class BreadthFirstSearch:
         self.ver_size = ver_size
         self.array = array
         self.order = list(order)
-        self.end = str(pattern)
-
-    def moves(self, mat):
-        output = []
-        m = eval(mat)   
-        i = 0
-        while 0 not in m[i]: i += 1
-        j = m[i].index(0); #blank space (zero)
-
-        for step in self.order:
-            if step == "U":
-                if i > 0:                                   
-                    m[i][j], m[i-1][j] = m[i-1][j], m[i][j];  #move up
-                    output.append(str(m))
-                    m[i][j], m[i-1][j] = m[i-1][j], m[i][j]; 
-            if step == "D":          
-                if i < self.ver_size-1:                                   
-                    m[i][j], m[i+1][j] = m[i+1][j], m[i][j]   #move down
-                    output.append(str(m))
-                    m[i][j], m[i+1][j] = m[i+1][j], m[i][j]
-            if step =="L":   
-                if j > 0:                                                      
-                    m[i][j], m[i][j-1] = m[i][j-1], m[i][j]   #move left
-                    output.append(str(m))
-                    m[i][j], m[i][j-1] = m[i][j-1], m[i][j]
-            if step =="R":
-                if j < self.col_size-1:                                   
-                    m[i][j], m[i][j+1] = m[i][j+1], m[i][j]   #move right
-                    output.append(str(m))
-                    m[i][j], m[i][j+1] = m[i][j+1], m[i][j]
-
-        return output
-
+        self.end = (pattern)
+        
     def Solve(self):
         print("Solving started")
         start_time = time.time()
-        front = [[str(self.array)]]
         expanded = []
+        path = self.bfs((self.array), self.end, self.num_moves(self.ver_size, self.col_size))
 
-        while front: #jeśli nie jest puste      
-            i = 0
-            path = front[0]
-            front = front[i+1:] #wszystkie oprocz front[i]
-            endnode = path[-1] #ostatni element
-            if endnode in expanded: continue
-            for k in self.moves(endnode):
-                #self.pp.pprint(self.moves(endnode))
-                #self.pp.pprint(endnode)
-                if k in expanded: continue
-                front.append(path + [k])
-            expanded.append(endnode)
-            #print(i)      
-            self.processed_states_number += 1
-            if endnode == self.end:
-                self.visited_states_number += 1
-                break
-            else:
-            	self.visited_states_number += 1
-            	
         self.solving_time = time.time() - start_time
         print("Expanded nodes:", len(expanded))
         self.max_recursion_depth = len(path) - 1
@@ -90,7 +39,7 @@ class BreadthFirstSearch:
         steps_array = []
 
         for k in range(0, len(solution_array)):
-            m = eval(solution_array[k])
+            m =solution_array[k]
             print(m)
             i = 0
             while 0 not in m[i]: i += 1
@@ -103,3 +52,55 @@ class BreadthFirstSearch:
             if steps_array[k][1] < steps_array[k-1][1]: self.solutionCode.append("R")
         print(''.join(self.solutionCode))
 
+    def bfs(self, puzzle, goal, get_moves):
+        queue = []
+        queue.append([puzzle])
+        while queue:
+            path = queue.pop(0)
+            node = path[-1]
+            if node == goal:
+                return path
+            else:
+                self.visited_states_number += 1
+
+            for adjacent in (get_moves(node)):
+                if adjacent not in path:
+                    new_path = list(path)
+                    new_path.append(adjacent)
+                    queue.append(new_path)
+                    if self.max_recursion_depth < len(path) - 1:
+                        self.max_recursion_depth = len(path) - 1
+
+    def num_moves(self, rows, cols):
+        def get_moves(subject):
+            moves = []
+
+            zrow, zcol = next((r, c)
+                for r, l in enumerate(subject)
+                    for c, v in enumerate(l) if v == 0)
+
+            def swap(row, col):
+                import copy
+                s = copy.deepcopy(subject)
+                s[zrow][zcol], s[row][col] = s[row][col], s[zrow][zcol]
+                return s
+
+            for step in self.order:
+                if step == "R":                     
+                    if zcol > 0:
+                        print("1")
+                        moves.append(swap(zrow, zcol - 1))
+                if step == "U":        
+                    if zrow < rows - 1:
+                        print("2")
+                        moves.append(swap(zrow + 1, zcol))
+                if step == "D":  
+                    if zrow > 0:
+                        print("3")
+                        moves.append(swap(zrow - 1, zcol))
+                if step == "L":        
+                    if zcol < cols - 1:
+                        print("4")
+                        moves.append(swap(zrow, zcol + 1)) 
+            return moves
+        return get_moves

@@ -1,5 +1,5 @@
-import time
 import pprint
+import time
 
 class HeuristicHamming:
 
@@ -56,8 +56,8 @@ class HeuristicHamming:
 	    misplaced = 0
 	    compare = 1
 	    m = eval(puzz)
-	    for i in range(self.col_size):
-	        for j in range(self.ver_size):
+	    for i in range(self.ver_size):
+	        for j in range(self.col_size):
 	            if m[i][j] != compare:
 	                misplaced += 1
 	            compare += 1

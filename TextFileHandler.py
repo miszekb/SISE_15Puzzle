@@ -45,7 +45,19 @@ class TextFileHandler:
         solutionFile.write(string_buf)
         solutionFile.close()
 
+        """
+        if ((len(solver_obj.solutionCode)) != 0):
+            string_buf = "".join(solver_obj.solutionCode)
+            solutionFile.write(str(len(solver_obj.solutionCode)) + "\n")
+            solutionFile.write(string_buf)
+            solutionFile.close()
+        else:
+            #string_buf = "".join(solver_obj.solutionCode)
+            #solutionFile.write(str(len(solver_obj.solutionCode)) + "\n")
+            solutionFile.write("-1")
+            solutionFile.close()
 
+        """
 
 
                     
